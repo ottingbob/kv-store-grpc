@@ -1,0 +1,171 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "KeyValue API",
+    "description": "API to READ/UPDATE/DELETE Key Value Pairs",
+    "version": "1.0.0",
+    "license": {
+      "name": "BSD 3-Clause License",
+      "url": "https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt"
+    }
+  },
+  "tags": [
+    {
+      "name": "KVService",
+      "description": "Service that allows for interaction with Key / Value store"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/kv": {
+      "post": {
+        "summary": "Create a KV pair in the RPC",
+        "operationId": "createKV",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/kv_store_grpcKVMessage"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/kv_store_grpcKVMessage"
+            }
+          }
+        ],
+        "tags": [
+          "KVService"
+        ]
+      }
+    },
+    "/v1/kv/{key}": {
+      "get": {
+        "summary": "Get a KV pair from the RPC",
+        "operationId": "getKV",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/kv_store_grpcKVMessage"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "KVService"
+        ]
+      },
+      "delete": {
+        "summary": "Delete a KV pair from the RPC",
+        "operationId": "deleteKV",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "KVService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "kv_store_grpcKVMessage": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "description": "The key to associate with the KV Message."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value to associate with the KV Message."
+        }
+      },
+      "description": "A representation of a key-value message.",
+      "title": "KVMessage",
+      "required": [
+        "key",
+        "value"
+      ]
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

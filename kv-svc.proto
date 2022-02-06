@@ -1,0 +1,100 @@
+syntax = "proto3";
+package kv_store_grpc;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/ottingbob/kv_store_grpc";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "KeyValue API";
+    version: "1.0.0";
+    description: "API to READ/UPDATE/DELETE Key Value Pairs";
+    license: {
+      name: "BSD 3-Clause License";
+      url: "https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt";
+    };
+  }; 
+  schemes: [HTTP, HTTPS];
+  consumes: "application/json";
+  produces: "application/json";
+};
+
+message KVMessage {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "KVMessage"
+      description: "A representation of a key-value message."
+      required: ["key", "value"]
+    };
+  };
+
+  string key = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "The key to associate with the KV Message."
+    }
+  ];
+
+  string value = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "The value to associate with the KV Message."
+    }
+  ];
+}
+
+message GetKVRequest {
+  string key = 1;
+}
+
+message DeleteKVRequest {
+  string key = 1;
+}
+
+service KVService {
+
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {
+    description: "Service that allows for interaction with Key / Value store"
+  };
+
+  rpc CreateKV(KVMessage) returns (KVMessage) {
+    option (google.api.http) = {
+      post: "/v1/kv",
+      body: "*"
+    };
+
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Create a KV pair in the RPC";
+      operation_id: "createKV";
+      tags: "KVService";
+    };
+  }
+
+  rpc DeleteKV(DeleteKVRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/kv/{key}"
+    };
+
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Delete a KV pair from the RPC";
+      operation_id: "deleteKV";
+      tags: "KVService";
+    };
+  }
+
+  rpc GetKV(GetKVRequest) returns (KVMessage) {
+    option (google.api.http) = {
+      get: "/v1/kv/{key}",
+    };
+
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Get a KV pair from the RPC";
+      operation_id: "getKV";
+      tags: "KVService";
+    };
+  }
+}

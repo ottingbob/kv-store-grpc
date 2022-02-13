@@ -1,0 +1,24 @@
+version: '3.7'
+
+services:
+  rest:
+    build:
+      context: '.'
+      args:
+        COMMAND: "rest -r kv-rpc"
+    image: kv-rest:latest
+    container_name: kv-rest
+    restart: always
+    ports:
+      - "8080:8080"
+
+  rpc:
+    build:
+      context: '.'
+      args:
+        COMMAND: "rpc"
+    image: kv-rpc:latest
+    container_name: kv-rpc
+    restart: always
+    ports:
+      - "5000:5000"

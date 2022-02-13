@@ -11,7 +11,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
     title: "KeyValue API";
     version: "1.0.0";
-    description: "API to READ/UPDATE/DELETE Key Value Pairs";
+    description: "API to Read/Create/Delete Key Value Pairs";
     license: {
       name: "BSD 3-Clause License";
       url: "https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt";
@@ -45,11 +45,19 @@ message KVMessage {
 }
 
 message GetKVRequest {
-  string key = 1;
+  string key = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "The key to query the KV Message."
+    }
+  ];
 }
 
 message DeleteKVRequest {
-  string key = 1;
+   string key = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "The key to of the KV Message to remove."
+    }
+  ];
 }
 
 service KVService {

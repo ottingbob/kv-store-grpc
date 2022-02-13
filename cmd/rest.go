@@ -22,13 +22,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// restCmd represents the rest command
 var restCmd = &cobra.Command{
 	Use:   "rest",
 	Short: "run the REST Key Value server",
 	Long:  `run the REST Key Value server`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := server.RunREST(); err != nil {
+		rpcEndpoint, err := cmd.Flags().GetString("rpc-endpoint")
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		if err := server.RunREST(rpcEndpoint); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
@@ -37,4 +42,5 @@ var restCmd = &cobra.Command{
 
 func init() {
 	RootCmd.AddCommand(restCmd)
+	restCmd.Flags().StringP("rpc-endpoint", "r", "localhost", "RPC Endpoint the REST service should connect to")
 }

@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-func RunREST() error {
+func RunREST(rpcEndpoint string) error {
 	fmt.Println("Key-Value REST Service Initializing...")
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -18,7 +18,7 @@ func RunREST() error {
 
 	var (
 		gwmux              = runtime.NewServeMux()
-		grpcServerEndpoint = "localhost:5000"
+		grpcServerEndpoint = fmt.Sprintf("%s:5000", rpcEndpoint)
 		opts               = []grpc.DialOption{grpc.WithInsecure()}
 	)
 
@@ -29,6 +29,5 @@ func RunREST() error {
 
 	mux := http.NewServeMux()
 	mux.Handle("/v1/", gwmux)
-	// serve swagger endpoint
 	return http.ListenAndServe(":8080", mux)
 }

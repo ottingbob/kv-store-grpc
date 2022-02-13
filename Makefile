@@ -5,7 +5,7 @@ GEN_GW_PATH := ${GEN_GO_PATH}
 PACKAGE_PATH := /github.com$(shell pwd | sed -n -e 's/^.*github.com//p' | sed -e 's/-/_/g')
 
 help:
-	echo Use make to create and clean up generated files
+	echo Create and clean up generated files in addition to building & testing application
 
 clean:
 	rm -rf ${GEN_GO_PATH} ${GEN_DOCS_PATH}
